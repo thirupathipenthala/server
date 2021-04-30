@@ -13,35 +13,27 @@ exports.login = (req, res, next) => {
     }
     let results;
     const conn = db.getConnetion();
+
     conn.query('SELECT * FROM tbl_user_info WHERE uname = ? and status=?', [username, 'Y'], function (error, results, fields) {
         if (error) {
             return res.status(400).json({
-
                 "failed": "error ocurred"
             })
         } else {
             if (results.length > 0) {
                 console.log(results[0].uname);
                 console.log(results[0].role);
-
-                const comparision = bcrypt.compare(password, results[0].password);
+                /*const comparision = bcrypt.compare(password, results[0].password);
                 if (!(results[0].uname.trim() === username.trim())) {
                     return res.json({
                         message: "username does not match"
                     });
                 }
-                if (!comparision) {
-                    return res.json({
-
-                        message: "password does not match"
-                    })
-
-                }
+                */
                 conn.query('SELECT * FROM roles WHERE id=?', [results[0].role], function (error, roledata, fields) {
                     console.log(roledata.length)
                     if (error) {
                         return res.status(400).json({
-
                             "failed": "error ocurred"
                         })
                     } else {
@@ -57,13 +49,9 @@ exports.login = (req, res, next) => {
                                 {
                                     uname: results[0].uname,
                                     id: results[0].id
-
-
                                 }, JWT_SECRET
 
                             );
-
-
                             res.status(200).json({
                                 token: token,
                                 role: roledata[0].name
@@ -75,8 +63,30 @@ exports.login = (req, res, next) => {
                         }
                     }
                 });
-
             }
         }
     });
+}
+
+exports.forgetpassword = (req, res, next) => {
+    const { email } = req.body;
+    console.log("email :" + email)
+    const conn = db.getConnetion();
+    conn.query('SELECT * FROM tbl_user_info WHERE emailId = ? and status=?', [email, 'Y'], function (error, results, fields) {
+        console.log(results.length)
+        if (error) {
+            return res.status(400).json({
+                message: "error ocurred"
+            })
+        } else {
+            if (results.length > 0) {
+                console.log(results[0].emailId)
+
+                res.status(200).json({
+                    message: "OK"
+                })
+            }
+        }
+    });
+
 }

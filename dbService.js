@@ -25,7 +25,7 @@ connection.connect((err) => {
 
 });
 function getConnetion() {
-    console.log('db in fun ' + connection.state);
+    console.log('db connection : ' + connection.state);
     return connection;
 }
 
