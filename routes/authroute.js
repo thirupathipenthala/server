@@ -10,7 +10,7 @@ router.post("/login", authController.login);
 /**
  * forget password
  */
-router.post('/forget-password', authController.forgetpassword)
+router.post('/forget-password', authController.forgetpassword);
 
 
 module.exports = router;

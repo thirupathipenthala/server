@@ -15,7 +15,9 @@ require('./dbService')
 
 //routes
 const authRoutes = require('./routes/authroute')
+const apiRoutes = require('./routes/api')
 app.use("/auth", authRoutes);
+app.use("/api", apiRoutes);
 
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500;

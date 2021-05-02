@@ -91,3 +91,104 @@ exports.forgetpassword = (req, res, next) => {
     });
 
 }
+
+
+exports.getDeviceFirmware = (req, res) => {
+    const page = parseInt(req.query.page || 1);
+    const limit = parseInt(req.query.limit || 10);
+    const offset = (page - 1) * limit;
+    const conn = db.getConnetion();
+    conn.query(`select id,fota_txnId,status,version,file_name,description,compatible_hw,created_dt,approval_dt,rejection_dt,remarks,checksum from tbl_iot_device_firmware LIMIT ${limit} OFFSET ${offset}`, function (error, deviceData) {
+        if (error) {
+            console.log(error)
+            return res.status(400).json({
+                "error": true,
+                "message": "error ocurred"
+            })
+        } else {
+            conn.query('select COUNT(*) as total from tbl_iot_device_firmware', function(error, countData) {
+                if (error) {
+                    return res.status(400).json({
+                        "error": true,
+                        "message": "error ocurred"
+                    })
+                } else {
+                   const total = countData[0].total;
+                   return res.json({
+                        "error": false,
+                        "data": deviceData,
+                        total
+                    })
+                }
+            })
+            
+
+        }
+
+    });
+
+}
+
+
+exports.deleteFirmware = (req, res) => {
+    const id = req.params.id;
+    const conn = db.getConnetion();
+    conn.query(`DELETE FROM tbl_iot_device_firmware WHERE id = ${id}`, function (error) {
+        if (error) {
+            console.log(error)
+            return res.status(400).json({
+                "error": true,
+                "message": "error ocurred"
+            })
+        } else {
+            conn.query(`DELETE FROM tbl_fota_device_info WHERE fotaId = ${id}`, function (error) {
+
+                if (error) {
+                    console.log(error)
+                    return res.status(400).json({
+                        "error": true,
+                        "message": "error ocurred"
+                    })
+                } 
+                return res.json({
+                    "error": false
+                })
+            })
+        }
+    })
+}
+
+
+exports.viewFirmware = (req, res) => {
+    const id = req.params.id;
+    const page = parseInt(req.query.page || 1);
+    const limit = parseInt(req.query.limit || 10);
+    const offset = (page - 1) * limit;
+
+    const conn = db.getConnetion();
+    conn.query(`SELECT * FROM tbl_fota_device_info WHERE fotaId = ${id} LIMIT ${limit} OFFSET ${offset}`, function (error, data) {
+        if (error) {
+            console.log(error)
+            return res.status(400).json({
+                "error": true,
+                "message": "error ocurred"
+            })
+        } else {
+            conn.query(`select COUNT(*) as total from tbl_fota_device_info WHERE fotaId = ${id}`, function(error, countData) {
+                if (error) {
+                    return res.status(400).json({
+                        "error": true,
+                        "message": "error ocurred"
+                    })
+                } else {
+
+                    return res.json({
+                        "error": false,
+                        data,
+                        total: countData[0].total
+                    })
+                }
+            })
+        }
+    })
+}
