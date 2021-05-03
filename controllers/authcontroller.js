@@ -194,15 +194,21 @@ exports.viewFirmware = (req, res) => {
 }
 
 exports.firmwareUplode = (req, res) => {
+    console.log(req.body);
+
+
     const x = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
     const fodaid = new Date().toISOString().replace("\\W", "")
     //console.log("" + req.params.description)
     let data = {
-        file: req.body.file, file_name: req.body.file_name, version: req.body.version,
-        status: 'Pending', created_dt: x, checksum: req.body.checksum, description: req.body.description,
+        file: req.file, file_name: req.body.file_name, version: req.body.version,
+        status: 'Pending', created_dt: x, checksum: req.file.size, description: req.body.description,
         fota_txnId: '12345'
 
     };
+
+    const devices = JSON.parse(req.body.devices);
+
     let sql = "INSERT INTO tbl_iot_device_firmware SET ?";
     const conn = db.getConnetion();
     conn.query(sql, data, function (error, results) {

@@ -1,5 +1,8 @@
 const express = require("express");
-const authController = require('../controllers/authcontroller')
+const authController = require('../controllers/authcontroller');
+var multer  = require('multer');
+var upload = multer();
+
 // const requireLogin = require('../middleware/requireLogin')
 const router = express.Router();
 
@@ -20,6 +23,6 @@ router.get('/view-device-firmware/:id', authController.viewFirmware);
 /**
  * fotafirmware uplode
  */
-router.post('/fota-Firmware-uplode', authController.firmwareUplode);
+router.post('/fota-Firmware-uplode',upload.single('file'), authController.firmwareUplode);
 
 module.exports = router;

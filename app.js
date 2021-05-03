@@ -2,13 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const http = require("http");
+
 dotenv.config();
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 
 //services
 require('./dbService')
