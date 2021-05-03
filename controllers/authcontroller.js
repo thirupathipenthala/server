@@ -194,9 +194,7 @@ exports.viewFirmware = (req, res) => {
 }
 
 exports.firmwareUplode = (req, res) => {
-    console.log(req.body);
-
-
+    //console.log(req.body);
     const x = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
     const fodaid = new Date().toISOString().replace("\\W", "")
     //console.log("" + req.params.description)
@@ -218,12 +216,28 @@ exports.firmwareUplode = (req, res) => {
                 "message": "error ocurred"
             })
         } else {
-            res.status(200).json({
-
-                "error": false
-            })
-
-
+            for (let index = 0; index < devices.length; index++) {
+                let element = {
+                    serialNo: devices[index].serialNo, devType: devices[index].devType, group_name: req.body.group_name, status: 'Pending'
+                };
+                // console.log(element)
+                let sql = "INSERT INTO tbl_fota_device_info SET ?";
+                conn.query(sql, element, function (error, results) {
+                    if (error) {
+                        return res.status(400).json({
+                            "error": true,
+                            "message": "error ocurred"
+                        })
+                    } else {
+                        if (index + 1 === devices.length) {
+                            // console.log(index + 1 + ":" + devices.length)
+                            return res.json({
+                                data: "sucess"
+                            })
+                        }
+                    }
+                });
+            }
         }
     });
 }
