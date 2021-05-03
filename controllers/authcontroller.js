@@ -28,7 +28,7 @@ exports.login = (req, res, next) => {
         } else {
             if (results.length > 0) {
                 const user = results[0];
-                
+
                 conn.query('SELECT * FROM roles WHERE id=? LIMIT 1', [results[0].role], function (error, roledata) {
 
                     if (error) {
@@ -106,22 +106,22 @@ exports.getDeviceFirmware = (req, res) => {
                 "message": "error ocurred"
             })
         } else {
-            conn.query('select COUNT(*) as total from tbl_iot_device_firmware', function(error, countData) {
+            conn.query('select COUNT(*) as total from tbl_iot_device_firmware', function (error, countData) {
                 if (error) {
                     return res.status(400).json({
                         "error": true,
                         "message": "error ocurred"
                     })
                 } else {
-                   const total = countData[0].total;
-                   return res.json({
+                    const total = countData[0].total;
+                    return res.json({
                         "error": false,
                         "data": deviceData,
                         total
                     })
                 }
             })
-            
+
 
         }
 
@@ -149,7 +149,7 @@ exports.deleteFirmware = (req, res) => {
                         "error": true,
                         "message": "error ocurred"
                     })
-                } 
+                }
                 return res.json({
                     "error": false
                 })
@@ -174,7 +174,7 @@ exports.viewFirmware = (req, res) => {
                 "message": "error ocurred"
             })
         } else {
-            conn.query(`select COUNT(*) as total from tbl_fota_device_info WHERE fotaId = ${id}`, function(error, countData) {
+            conn.query(`select COUNT(*) as total from tbl_fota_device_info WHERE fotaId = ${id}`, function (error, countData) {
                 if (error) {
                     return res.status(400).json({
                         "error": true,
@@ -191,4 +191,33 @@ exports.viewFirmware = (req, res) => {
             })
         }
     })
+}
+
+exports.firmwareUplode = (req, res) => {
+    const x = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    const fodaid = new Date().toISOString().replace("\\W", "")
+    //console.log("" + req.params.description)
+    let data = {
+        file: req.body.file, file_name: req.body.file_name, version: req.body.version,
+        status: 'Pending', created_dt: x, checksum: req.body.checksum, description: req.body.description,
+        fota_txnId: '12345'
+
+    };
+    let sql = "INSERT INTO tbl_iot_device_firmware SET ?";
+    const conn = db.getConnetion();
+    conn.query(sql, data, function (error, results) {
+        if (error) {
+            return res.status(400).json({
+                "error": true,
+                "message": "error ocurred"
+            })
+        } else {
+            res.status(200).json({
+
+                "error": false
+            })
+
+
+        }
+    });
 }
