@@ -98,7 +98,7 @@ exports.getDeviceFirmware = (req, res) => {
     const limit = parseInt(req.query.limit || 10);
     const offset = (page - 1) * limit;
     const conn = db.getConnetion();
-    conn.query(`select id,fota_txnId,status,version,file_name,description,compatible_hw,created_dt,approval_dt,rejection_dt,remarks,checksum from tbl_iot_device_firmware LIMIT ${limit} OFFSET ${offset}`, function (error, deviceData) {
+    conn.query(`select id,fota_txnId,status,version,file_name,description,compatible_hw,created_dt,approval_dt,rejection_dt,remarks,checksum from tbl_iot_device_firmware order by id desc LIMIT ${limit} OFFSET ${offset}`, function (error, deviceData) {
         if (error) {
             console.log(error)
             return res.status(400).json({
