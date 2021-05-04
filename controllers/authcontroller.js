@@ -241,3 +241,25 @@ exports.firmwareUplode = (req, res) => {
         }
     });
 }
+
+exports.updateFirmware = (req, res) => {
+    let deviceId = req.params.id
+    const x = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    const conn = db.getConnetion();
+    conn.query('Update tbl_iot_device_firmware Set status =? , approval_dt =? WHERE id =?', ['Approved', x, deviceId], function (error, result) {
+        if (error) {
+            console.log(error)
+            return res.status(400).json({
+                "error": true,
+                "message": "error ocurred"
+            })
+        } else {
+            numRows = result.affectedRows;
+            return res.json({
+                "error": false,
+                total: numRows
+            })
+        }
+
+    });
+}
