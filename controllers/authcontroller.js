@@ -218,7 +218,7 @@ exports.firmwareUplode = (req, res) => {
         } else {
             for (let index = 0; index < devices.length; index++) {
                 let element = {
-                    serialNo: devices[index].serialNo, devType: devices[index].devType, group_name: req.body.group_name, status: 'Pending'
+                    serialNo: devices[index].serialNo, devType: devices[index].devType, fotaId: req.body.fotaId, group_name: req.body.group_name, status: 'Pending'
                 };
                 // console.log(element)
                 let sql = "INSERT INTO tbl_fota_device_info SET ?";
