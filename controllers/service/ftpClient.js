@@ -2,7 +2,7 @@ let Client = require('ssh2-sftp-client');
 let sftp = new Client();
 const { readFileSync } = require('fs');
 sftp.connect({
-    host: '206.189.140.174',
+    host: '',
     port: 22, // Normal is 22 port
     username: 'iot',
     password: 'iotpsswd',
