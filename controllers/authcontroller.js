@@ -1,5 +1,4 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config')
 const db = require('../dbService');
@@ -261,5 +260,50 @@ exports.updateFirmware = (req, res) => {
             })
         }
 
+    });
+}
+
+exports.scheduledDataByFotaToFTPHandler = (req, res) => {
+    let id = req.body.id || '69';
+    let scheduledDT = req.body.scheduledDT;
+    let param = req.body.param || 'fotaSchedule';
+    let host = req.body.host;
+    let userName = req.body.userName;
+    let passwrd = req.body.passwrd;
+    const x = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    const conn = db.getConnetion();
+    conn.query(`select * from tbl_iot_device_firmware WHERE id = ${id}`, function (error, result) {
+        if (error) {
+            console.log(error)
+            return res.status(400).json({
+                "error": true,
+                "message": "error ocurred"
+            })
+        } else {
+            numRows = result.length;
+            console.log(result[0].file)
+            console.log(result[0].file_name)
+            console.log(numRows)
+            if (numRows > 0) {
+                let element = {
+                    parameter_name: param, parameter_value: x, fotaId: id
+                };
+                let sql = "INSERT INTO tbl_configuration SET ?";
+                conn.query(sql, element, function (error, result) {
+                    if (error) {
+                        console.log(error)
+                        return res.status(400).json({
+                            "error": true,
+                            "message": "error ocurred"
+                        })
+                    } else {
+                        res.json({
+                            "error": false,
+                            "messgae": 'sucess'
+                        })
+                    }
+                })
+            }
+        }
     });
 }

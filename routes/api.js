@@ -29,5 +29,10 @@ router.post('/fota-Firmware-uplode', upload.single('file'), authController.firmw
  * update firmware
  */
 router.put('/update-device-firmware/:id', authController.updateFirmware);
+/**
+ * scheduledDataByFotaToFTPHandler
+ */
+router.put('/scheduledData-fotato-ftphandler', authController.scheduledDataByFotaToFTPHandler);
+
 
 module.exports = router;
