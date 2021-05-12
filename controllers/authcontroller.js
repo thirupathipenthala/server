@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config')
 const db = require('../dbService');
 var dateFormat = require('dateformat');
+var nodeoutlook = require('nodejs-nodemailer-outlook')
 const router = express.Router();
 
 /**
@@ -82,10 +83,32 @@ exports.forgetpassword = (req, res, next) => {
         } else {
             if (results.length > 0) {
                 console.log(results[0].emailId)
+                var val = Math.floor(1000 + Math.random() * 900000);
+                nodeoutlook.sendEmail({
+                    auth: {
+                        user: "u_tpentala@iconectiv.com",
+                        pass: "Npg@6789"
+                    },
+                    from: 'u_tpentala@iconectiv.com',
+                    to: 'thirupathi@techtez.com',
+                    subject: 'FOTA ForgotPassword!',
+                    html: "<p>Your Password : " + val + "</p>",
 
-                res.status(200).json({
-                    message: "OK"
-                })
+                    onError: (e) => {
+                        return res.json({
+                            "message": "Something worng to send mesg"
+                        })
+                    },
+                    /* onSuccess: (i) => {
+                         return res.json({
+                             "message": "Please check your email"
+                         })
+                     }*/
+                }
+
+
+                );
+
             }
         }
     });
