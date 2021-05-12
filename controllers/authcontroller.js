@@ -2,6 +2,7 @@ const express = require("express");
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config')
 const db = require('../dbService');
+var dateFormat = require('dateformat');
 const router = express.Router();
 
 /**
@@ -195,12 +196,12 @@ exports.viewFirmware = (req, res) => {
 exports.firmwareUplode = (req, res) => {
     //console.log(req.body);
     const x = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
-    const fodaid = new Date().toISOString().replace("\\W", "")
+    var fota_txnId = dateFormat(new Date(), "ddhhssmm");
     //console.log("" + req.params.description)
     let data = {
         file: req.file, file_name: req.body.file_name, version: req.body.version,
         status: 'Pending', created_dt: x, checksum: req.file.size, description: req.body.description,
-        fota_txnId: '12345'
+        fota_txnId: fota_txnId
 
     };
 
