@@ -87,7 +87,7 @@ exports.forgetpassword = (req, res, next) => {
                 nodeoutlook.sendEmail({
                     auth: {
                         user: "u_tpentala@iconectiv.com",
-                        pass: "Npg@6789"
+                        pass: ""
                     },
                     from: 'u_tpentala@iconectiv.com',
                     to: 'thirupathi@techtez.com',
